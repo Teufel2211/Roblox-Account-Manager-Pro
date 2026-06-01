@@ -119,6 +119,11 @@ dotnet build
 dotnet run --project RobloxAccountManagerPro.UI
 ```
 
+6. **GitHub Release Artifact**
+- The repository includes a GitHub Actions workflow that publishes a Windows `win-x64` self-contained build.
+- On `main` pushes, tags, or manual workflow dispatch, it uploads the `publish` folder as the `RobloxAccountManagerPro-Release` artifact.
+- Download the artifact from the workflow run and launch `RobloxAccountManagerPro.exe`.
+
 ## 🔧 Configuration
 
 ### Supabase Setup

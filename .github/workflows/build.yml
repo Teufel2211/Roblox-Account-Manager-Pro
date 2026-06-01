@@ -5,6 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -30,11 +31,11 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
 
     - name: Publish
-      if: startsWith(github.ref, 'refs/tags/')
-      run: dotnet publish RobloxAccountManagerPro.UI/RobloxAccountManagerPro.UI.csproj -c Release -o ./publish
+      if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+      run: dotnet publish RobloxAccountManagerPro.UI/RobloxAccountManagerPro.UI.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o ./publish
 
     - name: Upload artifact
-      if: startsWith(github.ref, 'refs/tags/')
+      if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
       uses: actions/upload-artifact@v4
       with:
         name: RobloxAccountManagerPro-Release
