@@ -13,7 +13,7 @@ on:
   pull_request:
     branches: [ main, develop ]
   release:
-    types: [published]
+    types: [created, published]
   workflow_dispatch:
 
 jobs:
@@ -72,7 +72,7 @@ jobs:
         tag_name: ${{ github.ref_name }}
         name: Release ${{ github.ref_name }}
         body: Release created automatically from tag ${{ github.ref_name }}
-        files: ./publish-single/RobloxAccountManagerPro.exe
+        files: ./publish-single/*
 
     - name: Upload release asset
       if: github.event_name == 'release'

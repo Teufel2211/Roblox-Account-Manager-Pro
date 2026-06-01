@@ -17,6 +17,11 @@ public class AccountManagerViewModel : ViewModelBase
     private readonly ILoggingService _logger;
 
     private string _searchQuery = string.Empty;
+    private string _newAccountUsername = string.Empty;
+    private string _newAccountDisplayName = string.Empty;
+    private string _newAccountCategory = string.Empty;
+    private string _newAccountNotes = string.Empty;
+    private bool _newAccountIsFavorite;
     private RobloxAccount? _selectedAccount;
     private bool _isLoading;
 
@@ -31,6 +36,11 @@ public class AccountManagerViewModel : ViewModelBase
     public ICommand ToggleFavoriteCommand { get; }
 
     public string SearchQuery { get => _searchQuery; set => SetProperty(ref _searchQuery, value); }
+    public string NewAccountUsername { get => _newAccountUsername; set => SetProperty(ref _newAccountUsername, value); }
+    public string NewAccountDisplayName { get => _newAccountDisplayName; set => SetProperty(ref _newAccountDisplayName, value); }
+    public string NewAccountCategory { get => _newAccountCategory; set => SetProperty(ref _newAccountCategory, value); }
+    public string NewAccountNotes { get => _newAccountNotes; set => SetProperty(ref _newAccountNotes, value); }
+    public bool NewAccountIsFavorite { get => _newAccountIsFavorite; set => SetProperty(ref _newAccountIsFavorite, value); }
     public RobloxAccount? SelectedAccount { get => _selectedAccount; set => SetProperty(ref _selectedAccount, value); }
     public bool IsLoading { get => _isLoading; set => SetProperty(ref _isLoading, value); }
 
@@ -41,7 +51,7 @@ public class AccountManagerViewModel : ViewModelBase
 
         InitializeCategories();
 
-        AddAccountCommand = new RelayCommand(_ => OpenAddDialog());
+        AddAccountCommand = new AsyncRelayCommand(_ => AddAccountAsync());
         EditAccountCommand = new RelayCommand(_ => OpenEditDialog(), _ => SelectedAccount != null);
         DeleteAccountCommand = new AsyncRelayCommand(_ => DeleteSelectedAsync(), _ => SelectedAccount != null);
         SearchCommand = new AsyncRelayCommand(_ => SearchAsync());
@@ -82,6 +92,54 @@ public class AccountManagerViewModel : ViewModelBase
         var results = await _accountService.SearchAccountsAsync(SearchQuery);
         foreach (var account in results)
             Accounts.Add(account);
+    }
+
+    private async Task AddAccountAsync()
+    {
+        if (string.IsNullOrWhiteSpace(NewAccountUsername) || string.IsNullOrWhiteSpace(NewAccountDisplayName) || string.IsNullOrWhiteSpace(NewAccountCategory))
+        {
+            MessageBox.Show("Please provide a username, display name and category before adding an account.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        IsLoading = true;
+        try
+        {
+            var account = new RobloxAccount
+            {
+                Username = NewAccountUsername,
+                DisplayName = NewAccountDisplayName,
+                Category = NewAccountCategory,
+                Notes = NewAccountNotes,
+                IsFavorite = NewAccountIsFavorite,
+                CreatedAt = DateTime.UtcNow,
+                LastUsed = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            await _accountService.CreateAccountAsync(account);
+            await LoadAccountsAsync();
+            ClearNewAccountForm();
+            MessageBox.Show("Account successfully added.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to add account", ex, "AccountManager");
+            MessageBox.Show($"Unable to add account: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void ClearNewAccountForm()
+    {
+        NewAccountUsername = string.Empty;
+        NewAccountDisplayName = string.Empty;
+        NewAccountCategory = string.Empty;
+        NewAccountNotes = string.Empty;
+        NewAccountIsFavorite = false;
     }
 
     private async Task DeleteSelectedAsync()

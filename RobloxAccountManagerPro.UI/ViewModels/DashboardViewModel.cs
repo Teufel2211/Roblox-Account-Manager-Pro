@@ -83,41 +83,71 @@ public class DashboardViewModel : ViewModelBase
 
     private async Task StartAllInstancesAsync()
     {
-        var accounts = await _accountService.GetAllAccountsAsync();
-        foreach (var account in accounts)
+        try
         {
-            try
+            var accounts = await _accountService.GetAllAccountsAsync();
+            foreach (var account in accounts)
             {
-                await _processManager.LaunchRobloxAsync(account);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to launch {account.Username}", ex);
+                try
+                {
+                    await _processManager.LaunchRobloxAsync(account);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Failed to launch {account.Username}", ex, "Dashboard");
+                }
             }
         }
-        await RefreshDashboardAsync();
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to retrieve accounts for start all", ex, "Dashboard");
+        }
+        finally
+        {
+            await RefreshDashboardAsync();
+        }
     }
 
     private async Task StartFavoritesAsync()
     {
-        var favorites = await _accountService.GetFavoriteAccountsAsync();
-        foreach (var account in favorites)
+        try
         {
-            try
+            var favorites = await _accountService.GetFavoriteAccountsAsync();
+            foreach (var account in favorites)
             {
-                await _processManager.LaunchRobloxAsync(account);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to launch {account.Username}", ex);
+                try
+                {
+                    await _processManager.LaunchRobloxAsync(account);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Failed to launch {account.Username}", ex, "Dashboard");
+                }
             }
         }
-        await RefreshDashboardAsync();
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to retrieve favorite accounts for start favorites", ex, "Dashboard");
+        }
+        finally
+        {
+            await RefreshDashboardAsync();
+        }
     }
 
     private async Task StopAllInstancesAsync()
     {
-        await _processManager.TerminateAllInstancesAsync();
-        await RefreshDashboardAsync();
+        try
+        {
+            await _processManager.TerminateAllInstancesAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to stop all instances", ex, "Dashboard");
+        }
+        finally
+        {
+            await RefreshDashboardAsync();
+        }
     }
 }

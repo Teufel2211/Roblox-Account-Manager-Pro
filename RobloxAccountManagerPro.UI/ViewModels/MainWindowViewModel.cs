@@ -1,5 +1,6 @@
 namespace RobloxAccountManagerPro.UI.ViewModels;
 
+using System.Windows.Input;
 using RobloxAccountManagerPro.Core.Interfaces;
 using RobloxAccountManagerPro.UI.Infrastructure;
 
@@ -14,12 +15,19 @@ public class MainWindowViewModel : ViewModelBase
 
     private string _currentTheme = "Dark";
     private bool _isOnline;
+    private int _selectedTabIndex;
 
     public DashboardViewModel DashboardViewModel { get; }
     public AccountManagerViewModel AccountManagerViewModel { get; }
 
+    public ICommand ShowDashboardCommand { get; }
+    public ICommand ShowAccountsCommand { get; }
+    public ICommand ShowSettingsCommand { get; }
+    public ICommand ShowLogsCommand { get; }
+
     public string CurrentTheme { get => _currentTheme; set => SetProperty(ref _currentTheme, value); }
     public bool IsOnline { get => _isOnline; set => SetProperty(ref _isOnline, value); }
+    public int SelectedTabIndex { get => _selectedTabIndex; set => SetProperty(ref _selectedTabIndex, value); }
 
     public MainWindowViewModel(
         IAccountService accountService,
@@ -32,6 +40,11 @@ public class MainWindowViewModel : ViewModelBase
 
         DashboardViewModel = new DashboardViewModel(accountService, processManager, logger);
         AccountManagerViewModel = new AccountManagerViewModel(accountService, logger);
+
+        ShowDashboardCommand = new RelayCommand(_ => SelectedTabIndex = 0);
+        ShowAccountsCommand = new RelayCommand(_ => SelectedTabIndex = 1);
+        ShowSettingsCommand = new RelayCommand(_ => SelectedTabIndex = 2);
+        ShowLogsCommand = new RelayCommand(_ => SelectedTabIndex = 3);
 
         _logger.LogInfo("Application started", "MainWindow");
     }

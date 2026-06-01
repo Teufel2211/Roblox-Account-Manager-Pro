@@ -1,5 +1,6 @@
 namespace RobloxAccountManagerPro.UI.Infrastructure;
 
+using System.Windows;
 using System.Windows.Input;
 
 /// <summary>
@@ -56,6 +57,10 @@ public class AsyncRelayCommand : ICommand
         try
         {
             await _execute(parameter);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {
