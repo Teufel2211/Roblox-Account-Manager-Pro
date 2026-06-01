@@ -10,7 +10,6 @@ public class AccountService : IAccountService
 {
     private readonly ISupabaseService _supabaseService;
     private readonly ILoggingService _logger;
-    private List<RobloxAccount> _localCache = [];
 
     public AccountService(ISupabaseService supabaseService, ILoggingService logger)
     {
@@ -22,13 +21,12 @@ public class AccountService : IAccountService
     {
         try
         {
-            _localCache = (await _supabaseService.GetAllAccountsAsync()).ToList();
-            return _localCache;
+            return await _supabaseService.GetAllAccountsAsync();
         }
         catch (Exception ex)
         {
             _logger.LogError("Failed to fetch accounts", ex, "AccountService");
-            return _localCache;
+            throw;
         }
     }
 
@@ -46,7 +44,6 @@ public class AccountService : IAccountService
     public async Task<RobloxAccount> CreateAccountAsync(RobloxAccount account)
     {
         var result = await _supabaseService.InsertAccountAsync(account);
-        _localCache.Add(result);
         _logger.LogInfo($"Created account: {account.Username}", "AccountService");
         return result;
     }
@@ -54,9 +51,6 @@ public class AccountService : IAccountService
     public async Task<RobloxAccount> UpdateAccountAsync(RobloxAccount account)
     {
         var result = await _supabaseService.UpdateAccountAsync(account);
-        var index = _localCache.FindIndex(a => a.Id == account.Id);
-        if (index >= 0)
-            _localCache[index] = result;
         _logger.LogInfo($"Updated account: {account.Username}", "AccountService");
         return result;
     }
@@ -64,7 +58,6 @@ public class AccountService : IAccountService
     public async Task<bool> DeleteAccountAsync(Guid id)
     {
         var result = await _supabaseService.DeleteAccountAsync(id);
-        _localCache.RemoveAll(a => a.Id == id);
         _logger.LogInfo($"Deleted account: {id}", "AccountService");
         return result;
     }
