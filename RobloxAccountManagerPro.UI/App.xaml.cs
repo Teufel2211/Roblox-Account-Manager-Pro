@@ -1,4 +1,5 @@
 using System.Configuration;
+using System.Net.Http;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using RobloxAccountManagerPro.Core.Interfaces;
@@ -65,7 +66,7 @@ public partial class App : Application
         services.AddSingleton<ILoggingService, LoggingService>();
         services.AddSingleton<IEncryptionService, EncryptionService>();
         services.AddSingleton<IProcessManagerService, ProcessManagerService>();
-        services.AddHttpClient<ISupabaseService, SupabaseService>();
+        services.AddSingleton<ISupabaseService>(sp => new SupabaseService(new HttpClient(), sp.GetRequiredService<ILoggingService>()));
         services.AddSingleton<IAccountService, AccountService>();
         services.AddSingleton<DashboardViewModel>();
         services.AddSingleton<AccountManagerViewModel>();

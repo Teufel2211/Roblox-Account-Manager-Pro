@@ -69,12 +69,13 @@ jobs:
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag_name: ${{ github.ref_name }}
         name: Release ${{ github.ref_name }}
         body: Release created automatically from tag ${{ github.ref_name }}
-        files: ./publish-single/*
+        files: ./publish-single/RobloxAccountManagerPro.exe
 
-    - name: Upload release asset
+    - name: Upload release asset for manual releases
       if: github.event_name == 'release'
       uses: actions/upload-release-asset@v1
       with:

@@ -11,6 +11,7 @@ public class MainWindowViewModel : ViewModelBase
 {
     private readonly IAccountService _accountService;
     private readonly IProcessManagerService _processManager;
+    private readonly IEncryptionService _encryptionService;
     private readonly ILoggingService _logger;
 
     private string _currentTheme = "Dark";
@@ -32,14 +33,16 @@ public class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(
         IAccountService accountService,
         IProcessManagerService processManager,
+        IEncryptionService encryptionService,
         ILoggingService logger)
     {
         _accountService = accountService;
         _processManager = processManager;
+        _encryptionService = encryptionService;
         _logger = logger;
 
         DashboardViewModel = new DashboardViewModel(accountService, processManager, logger);
-        AccountManagerViewModel = new AccountManagerViewModel(accountService, logger);
+        AccountManagerViewModel = new AccountManagerViewModel(accountService, encryptionService, logger);
 
         ShowDashboardCommand = new RelayCommand(_ => SelectedTabIndex = 0);
         ShowAccountsCommand = new RelayCommand(_ => SelectedTabIndex = 1);

@@ -14,10 +14,12 @@ using RobloxAccountManagerPro.UI.Infrastructure;
 public class AccountManagerViewModel : ViewModelBase
 {
     private readonly IAccountService _accountService;
+    private readonly IEncryptionService _encryptionService;
     private readonly ILoggingService _logger;
 
     private string _searchQuery = string.Empty;
     private string _newAccountUsername = string.Empty;
+    private string _newAccountPassword = string.Empty;
     private string _newAccountDisplayName = string.Empty;
     private string _newAccountCategory = string.Empty;
     private string _newAccountNotes = string.Empty;
@@ -37,6 +39,7 @@ public class AccountManagerViewModel : ViewModelBase
 
     public string SearchQuery { get => _searchQuery; set => SetProperty(ref _searchQuery, value); }
     public string NewAccountUsername { get => _newAccountUsername; set => SetProperty(ref _newAccountUsername, value); }
+    public string NewAccountPassword { get => _newAccountPassword; set => SetProperty(ref _newAccountPassword, value); }
     public string NewAccountDisplayName { get => _newAccountDisplayName; set => SetProperty(ref _newAccountDisplayName, value); }
     public string NewAccountCategory { get => _newAccountCategory; set => SetProperty(ref _newAccountCategory, value); }
     public string NewAccountNotes { get => _newAccountNotes; set => SetProperty(ref _newAccountNotes, value); }
@@ -44,9 +47,10 @@ public class AccountManagerViewModel : ViewModelBase
     public RobloxAccount? SelectedAccount { get => _selectedAccount; set => SetProperty(ref _selectedAccount, value); }
     public bool IsLoading { get => _isLoading; set => SetProperty(ref _isLoading, value); }
 
-    public AccountManagerViewModel(IAccountService accountService, ILoggingService logger)
+    public AccountManagerViewModel(IAccountService accountService, IEncryptionService encryptionService, ILoggingService logger)
     {
         _accountService = accountService;
+        _encryptionService = encryptionService;
         _logger = logger;
 
         InitializeCategories();
@@ -96,9 +100,9 @@ public class AccountManagerViewModel : ViewModelBase
 
     private async Task AddAccountAsync()
     {
-        if (string.IsNullOrWhiteSpace(NewAccountUsername) || string.IsNullOrWhiteSpace(NewAccountDisplayName) || string.IsNullOrWhiteSpace(NewAccountCategory))
+        if (string.IsNullOrWhiteSpace(NewAccountUsername) || string.IsNullOrWhiteSpace(NewAccountPassword) || string.IsNullOrWhiteSpace(NewAccountDisplayName) || string.IsNullOrWhiteSpace(NewAccountCategory))
         {
-            MessageBox.Show("Please provide a username, display name and category before adding an account.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Please provide username, password, display name, and category before logging in.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -112,6 +116,7 @@ public class AccountManagerViewModel : ViewModelBase
                 Category = NewAccountCategory,
                 Notes = NewAccountNotes,
                 IsFavorite = NewAccountIsFavorite,
+                EncryptedPassword = _encryptionService.EncryptPassword(NewAccountPassword),
                 CreatedAt = DateTime.UtcNow,
                 LastUsed = DateTime.UtcNow,
                 IsActive = true
@@ -136,6 +141,7 @@ public class AccountManagerViewModel : ViewModelBase
     private void ClearNewAccountForm()
     {
         NewAccountUsername = string.Empty;
+        NewAccountPassword = string.Empty;
         NewAccountDisplayName = string.Empty;
         NewAccountCategory = string.Empty;
         NewAccountNotes = string.Empty;

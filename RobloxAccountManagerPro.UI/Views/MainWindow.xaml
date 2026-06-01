@@ -129,6 +129,7 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Username:" Foreground="#94A3B8" VerticalAlignment="Center" />
@@ -137,15 +138,18 @@
                                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Display Name:" Foreground="#94A3B8" VerticalAlignment="Center" />
                                     <TextBox Grid.Row="1" Grid.Column="1" Background="#0F172A" Foreground="#FFFFFF" Padding="10" Text="{Binding AccountManagerViewModel.NewAccountDisplayName, UpdateSourceTrigger=PropertyChanged}" />
 
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Category:" Foreground="#94A3B8" VerticalAlignment="Center" />
-                                    <ComboBox Grid.Row="2" Grid.Column="1" Background="#0F172A" Foreground="#FFFFFF" ItemsSource="{Binding AccountManagerViewModel.Categories}" SelectedItem="{Binding AccountManagerViewModel.NewAccountCategory, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Password:" Foreground="#94A3B8" VerticalAlignment="Center" />
+                                    <TextBox Grid.Row="2" Grid.Column="1" Background="#0F172A" Foreground="#FFFFFF" Padding="10" Text="{Binding AccountManagerViewModel.NewAccountPassword, UpdateSourceTrigger=PropertyChanged}" />
 
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Notes:" Foreground="#94A3B8" VerticalAlignment="Top" />
-                                    <TextBox Grid.Row="3" Grid.Column="1" Background="#0F172A" Foreground="#FFFFFF" Padding="10" AcceptsReturn="True" Height="80" Text="{Binding AccountManagerViewModel.NewAccountNotes, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Category:" Foreground="#94A3B8" VerticalAlignment="Center" />
+                                <ComboBox Grid.Row="3" Grid.Column="1" Background="#0F172A" Foreground="#FFFFFF" ItemsSource="{Binding AccountManagerViewModel.Categories}" SelectedItem="{Binding AccountManagerViewModel.NewAccountCategory, UpdateSourceTrigger=PropertyChanged}" />
 
-                                    <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Notes:" Foreground="#94A3B8" VerticalAlignment="Top" />
+                                <TextBox Grid.Row="4" Grid.Column="1" Background="#0F172A" Foreground="#FFFFFF" Padding="10" AcceptsReturn="True" Height="80" Text="{Binding AccountManagerViewModel.NewAccountNotes, UpdateSourceTrigger=PropertyChanged}" />
+
+                                    <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
                                         <CheckBox IsChecked="{Binding AccountManagerViewModel.NewAccountIsFavorite}" Foreground="#FFFFFF" Margin="0,0,10,0">Favorite</CheckBox>
-                                        <Button Content="➕ Add Account" Padding="12,8" Background="#06B6D4" Foreground="#0F172A" FontWeight="Bold" Command="{Binding AccountManagerViewModel.AddAccountCommand}" />
+                                        <Button Content="🔐 Login and Add" Padding="12,8" Background="#06B6D4" Foreground="#0F172A" FontWeight="Bold" Command="{Binding AccountManagerViewModel.AddAccountCommand}" />
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>
@@ -177,6 +181,29 @@
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Settings" Background="#1A1F3A">
+                <Grid Background="#0F172A" Margin="20">
+                    <StackPanel>
+                        <TextBlock Text="Settings" FontSize="20" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,20" />
+                        <TextBlock Text="Theme:" Foreground="#94A3B8" />
+                        <ComboBox Width="200" Background="#1E293B" Foreground="#FFFFFF" SelectedItem="{Binding CurrentTheme}">
+                            <ComboBoxItem Content="Dark" />
+                            <ComboBoxItem Content="Light" />
+                        </ComboBox>
+                        <TextBlock Text="\nSettings are not fully implemented yet." Foreground="#94A3B8" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Logs" Background="#1A1F3A">
+                <Grid Background="#0F172A" Margin="20">
+                    <StackPanel>
+                        <TextBlock Text="Logs" FontSize="20" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,20" />
+                        <TextBlock Text="This page will show application logs and recent actions." Foreground="#94A3B8" />
                     </StackPanel>
                 </Grid>
             </TabItem>
