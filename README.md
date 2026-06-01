@@ -89,6 +89,17 @@ RobloxAccountManagerPro/
 - .NET 8 Runtime
 - Supabase Account (free tier available)
 
+## Wiki
+
+Weitere Dokumentation findest du im `wiki/`-Ordner:
+- `wiki/Home.md`
+- `wiki/Installation.md`
+- `wiki/Features.md`
+- `wiki/Architecture.md`
+- `wiki/Release.md`
+- `wiki/Contributing.md`
+
+
 ### Installation
 
 1. **Clone the repository**
