@@ -17,7 +17,6 @@
         <Border Grid.Column="0" Background="#1A1F3A" Margin="0" Padding="20" VerticalAlignment="Top">
             <StackPanel>
                 <TextBlock Text="ROBLOX AMP" FontSize="20" FontWeight="Bold" Foreground="#06B6D4" Margin="0,0,0,30" />
-            
                 <Button Content="📊 Dashboard" Height="40" Margin="0,10,0,0" Background="#06B6D4" Foreground="#0F172A" FontWeight="Bold" />
                 <Button Content="👥 Accounts" Height="40" Margin="0,10,0,0" Background="#1E293B" Foreground="#FFFFFF" />
                 <Button Content="⚙️ Settings" Height="40" Margin="0,10,0,0" Background="#1E293B" Foreground="#FFFFFF" />
@@ -40,32 +39,31 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <!-- Card Template -->
                             <Border Grid.Column="0" Background="#1E293B" BorderBrush="#06B6D4" BorderThickness="1" CornerRadius="8" Margin="0,0,10,0" Padding="20">
                                 <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="Total Accounts" Foreground="#94A3B8" FontSize="12" />
-                                    <TextBlock Text="42" Foreground="#06B6D4" FontSize="32" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding DashboardViewModel.TotalAccounts}" Foreground="#06B6D4" FontSize="32" FontWeight="Bold" />
                                 </StackPanel>
                             </Border>
 
                             <Border Grid.Column="1" Background="#1E293B" BorderBrush="#06B6D4" BorderThickness="1" CornerRadius="8" Margin="10,0,10,0" Padding="20">
                                 <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="Favorites" Foreground="#94A3B8" FontSize="12" />
-                                    <TextBlock Text="12" Foreground="#06B6D4" FontSize="32" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding DashboardViewModel.FavoriteAccounts}" Foreground="#06B6D4" FontSize="32" FontWeight="Bold" />
                                 </StackPanel>
                             </Border>
 
                             <Border Grid.Column="2" Background="#1E293B" BorderBrush="#06B6D4" BorderThickness="1" CornerRadius="8" Margin="10,0,10,0" Padding="20">
                                 <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="Active Instances" Foreground="#94A3B8" FontSize="12" />
-                                    <TextBlock Text="5" Foreground="#06B6D4" FontSize="32" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding DashboardViewModel.ActiveInstances}" Foreground="#06B6D4" FontSize="32" FontWeight="Bold" />
                                 </StackPanel>
                             </Border>
 
                             <Border Grid.Column="3" Background="#1E293B" BorderBrush="#06B6D4" BorderThickness="1" CornerRadius="8" Margin="10,0,0,0" Padding="20">
                                 <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="Memory Usage" Foreground="#94A3B8" FontSize="12" />
-                                    <TextBlock Text="2.5 GB" Foreground="#06B6D4" FontSize="32" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding DashboardViewModel.TotalMemoryUsageMb, StringFormat={}{0} MB}" Foreground="#06B6D4" FontSize="32" FontWeight="Bold" />
                                 </StackPanel>
                             </Border>
                         </Grid>
@@ -79,18 +77,24 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             
-                            <Button Grid.Column="0" Content="▶ Start All" Padding="15,12" Background="#10B981" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,10,0" />
-                            <Button Grid.Column="1" Content="⭐ Start Favorites" Padding="15,12" Background="#06B6D4" Foreground="#0F172A" FontWeight="Bold" Margin="0,0,10,0" />
-                            <Button Grid.Column="2" Content="⏹ Stop All" Padding="15,12" Background="#EF4444" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,10,0" />
-                            <Button Grid.Column="3" Content="🔄 Refresh" Padding="15,12" Background="#6366F1" Foreground="#FFFFFF" FontWeight="Bold" />
+                            <Button Grid.Column="0" Content="▶ Start All" Padding="15,12" Background="#10B981" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,10,0" Command="{Binding DashboardViewModel.StartAllCommand}" />
+                            <Button Grid.Column="1" Content="⭐ Start Favorites" Padding="15,12" Background="#06B6D4" Foreground="#0F172A" FontWeight="Bold" Margin="0,0,10,0" Command="{Binding DashboardViewModel.StartFavoritesCommand}" />
+                            <Button Grid.Column="2" Content="⏹ Stop All" Padding="15,12" Background="#EF4444" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,10,0" Command="{Binding DashboardViewModel.StopAllCommand}" />
+                            <Button Grid.Column="3" Content="🔄 Refresh" Padding="15,12" Background="#6366F1" Foreground="#FFFFFF" FontWeight="Bold" Command="{Binding DashboardViewModel.RefreshCommand}" />
                         </Grid>
 
                         <!-- Recent Accounts -->
                         <TextBlock Text="Recent Accounts" FontSize="16" FontWeight="Bold" Foreground="#FFFFFF" Margin="0,0,0,10" />
-                        <ListBox Height="300" Background="#1E293B" Foreground="#FFFFFF" BorderBrush="#06B6D4" BorderThickness="1">
-                            <ListBoxItem Content="MainAccount (Main) - Last used: 2 hours ago" />
-                            <ListBoxItem Content="AltAccount01 (Alt) - Last used: 1 day ago" />
-                            <ListBoxItem Content="DevAccount (Dev) - Last used: 3 days ago" />
+                        <ListBox Height="300" Background="#1E293B" Foreground="#FFFFFF" BorderBrush="#06B6D4" BorderThickness="1" ItemsSource="{Binding DashboardViewModel.RecentAccounts}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Username}" FontWeight="Bold" Foreground="#FFFFFF" />
+                                        <TextBlock Text=" - " Foreground="#94A3B8" />
+                                        <TextBlock Text="{Binding Category}" Foreground="#94A3B8" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
                         </ListBox>
                     </StackPanel>
                 </Grid>
@@ -107,15 +111,35 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             
-                            <TextBox Grid.Column="0" Background="#1E293B" Foreground="#FFFFFF" Padding="10" Text="Search accounts..." />
-                            <Button Grid.Column="1" Content="➕ Add Account" Padding="20,0" Background="#06B6D4" Foreground="#0F172A" FontWeight="Bold" Margin="10,0,0,0" />
+                            <TextBox Grid.Column="0" Background="#1E293B" Foreground="#FFFFFF" Padding="10" Text="{Binding AccountManagerViewModel.SearchQuery, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="➕ Add Account" Padding="20,0" Background="#06B6D4" Foreground="#0F172A" FontWeight="Bold" Margin="10,0,0,0" Command="{Binding AccountManagerViewModel.AddAccountCommand}" />
                         </Grid>
 
-                        <!-- Accounts List -->
-                        <ListBox Height="500" Background="#1E293B" Foreground="#FFFFFF" BorderBrush="#06B6D4" BorderThickness="1">
-                            <ListBoxItem Content="MainAccount (Main) - VIP, Main Tags" />
-                            <ListBoxItem Content="AltAccount01 (Alt) - Alt Tag" />
-                            <ListBoxItem Content="DevAccount (Dev) - Dev Tag" />
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Refresh" Padding="15,12" Background="#6366F1" Foreground="#FFFFFF" FontWeight="Bold" Command="{Binding AccountManagerViewModel.RefreshCommand}" Margin="0,0,10,0" />
+                            <Button Grid.Column="1" Content="Edit" Padding="15,12" Background="#F59E0B" Foreground="#FFFFFF" FontWeight="Bold" Command="{Binding AccountManagerViewModel.EditAccountCommand}" Margin="0,0,10,0" />
+                            <Button Grid.Column="2" Content="Delete" Padding="15,12" Background="#EF4444" Foreground="#FFFFFF" FontWeight="Bold" Command="{Binding AccountManagerViewModel.DeleteAccountCommand}" Margin="0,0,10,0" />
+                            <Button Grid.Column="3" Content="★ Favorite" Padding="15,12" Background="#10B981" Foreground="#FFFFFF" FontWeight="Bold" Command="{Binding AccountManagerViewModel.ToggleFavoriteCommand}" />
+                        </Grid>
+
+                        <ListBox Height="500" Background="#1E293B" Foreground="#FFFFFF" BorderBrush="#06B6D4" BorderThickness="1" ItemsSource="{Binding AccountManagerViewModel.Accounts}" SelectedItem="{Binding AccountManagerViewModel.SelectedAccount, Mode=TwoWay}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                                        <TextBlock Text="{Binding Username}" FontWeight="Bold" Foreground="#FFFFFF" />
+                                        <TextBlock Text=" | " Foreground="#94A3B8" />
+                                        <TextBlock Text="{Binding Category}" Foreground="#94A3B8" />
+                                        <TextBlock Text=" | " Foreground="#94A3B8" />
+                                        <TextBlock Text="{Binding Email}" Foreground="#94A3B8" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
                         </ListBox>
                     </StackPanel>
                 </Grid>

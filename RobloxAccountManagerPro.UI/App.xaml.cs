@@ -53,7 +53,10 @@ public partial class App : Application
         }
 
         var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
-        mainWindow.DataContext = serviceProvider.GetRequiredService<MainWindowViewModel>();
+        var mainWindowViewModel = serviceProvider.GetRequiredService<MainWindowViewModel>();
+        mainWindow.DataContext = mainWindowViewModel;
+
+        await mainWindowViewModel.InitializeAsync();
         mainWindow.Show();
     }
 

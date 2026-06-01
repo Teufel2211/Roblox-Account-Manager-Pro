@@ -1,5 +1,8 @@
 name: Build and Release
 
+permissions:
+  contents: write
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -18,12 +21,12 @@ jobs:
     runs-on: windows-2025-vs2026
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
 
@@ -41,12 +44,12 @@ jobs:
     if: github.event_name == 'release' || (github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'))
     runs-on: windows-2025-vs2026
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
 
@@ -61,6 +64,15 @@ jobs:
       with:
         name: RobloxAccountManagerPro-Release
         path: ./publish-single
+
+    - name: Create GitHub Release for tag push
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        body: Release created automatically from tag ${{ github.ref_name }}
+        files: ./publish-single/RobloxAccountManagerPro.exe
 
     - name: Upload release asset
       if: github.event_name == 'release'
